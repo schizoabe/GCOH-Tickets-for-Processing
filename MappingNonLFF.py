@@ -13,8 +13,7 @@ def mappingnonlffaktion():
     filepath = Path('Inputs/out.csv')
 
     df = pd.read_excel('Inputs/PCB pull.xlsx', sheet_name='PCB pull')
-    out = pd.DataFrame(columns=['Characteristic Name[CHANM]', 'Characteristic Value[CHAVL]', 'Target Hierarchy Name[TGT_HRY_HIENM]',
-                       'Target Hierarchy Node Name[TGT_HRY_NODENAME]', 'Target Hierarchy Node Object Name[TGT_HRY_NODEOBJNM]', 'Requestor Comment[REQUESTOR_CMT]'])
+    rows = []
     unmappable = pd.DataFrame(columns=['Obj', 'Target'])
 
     wb = xl.load_workbook('Inputs/PyDump.xlsx')
@@ -61,7 +60,7 @@ def mappingnonlffaktion():
         else:
             mapp = 'Yes'
 
-        out = out._append({
+        rows.append({
             'Characteristic Name[CHANM]': objecttype,
             'Characteristic Value[CHAVL]': formapping,
             'Target Hierarchy Name[TGT_HRY_HIENM]': 'GCOH',
@@ -69,12 +68,16 @@ def mappingnonlffaktion():
             'Target Hierarchy Node Object Name[TGT_HRY_NODEOBJNM]': '0HIER_NODE',
             'Requestor Comment[REQUESTOR_CMT]': ws.cell(row=i, column=3).value,
             'Date in Format YYYY-MM-DD[VALID_FROM]': dt.datetime.now().strftime('%Y-%m-%d')
-        }, ignore_index=True)
-
-        # replace hyphens with blanks
-        out['Date in Format YYYY-MM-DD[VALID_FROM]'] = out['Date in Format YYYY-MM-DD[VALID_FROM]'].str.replace(
-            '-', '')
+        })
 
         i += 1
+
+    out = pd.DataFrame(rows, columns=['Characteristic Name[CHANM]', 'Characteristic Value[CHAVL]', 'Target Hierarchy Name[TGT_HRY_HIENM]',
+                       'Target Hierarchy Node Name[TGT_HRY_NODENAME]', 'Target Hierarchy Node Object Name[TGT_HRY_NODEOBJNM]', 'Requestor Comment[REQUESTOR_CMT]',
+                       'Date in Format YYYY-MM-DD[VALID_FROM]'])
+
+    # replace hyphens with blanks
+    out['Date in Format YYYY-MM-DD[VALID_FROM]'] = out['Date in Format YYYY-MM-DD[VALID_FROM]'].str.replace(
+        '-', '')
 
     out.to_csv(filepath)
