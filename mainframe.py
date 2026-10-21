@@ -27,7 +27,7 @@ def run_hierarchy_maker():
         os.system('cls')
         print("running hierarchy maker")
 
-        pandas_path = Path("pandas.xlsx").resolve()
+        pandas_path = HierarchyMaker.INPUT_FILE
 
         # Attach to existing Excel or start a new one
         excel_was_running = True
@@ -43,7 +43,7 @@ def run_hierarchy_maker():
         wb = excel.Workbooks.Open(str(pandas_path))
 
         print(
-            "\nEdit pandas.xlsx as needed. USE 0a[BLANKS] for objects that are weird looking")
+            f"\nEdit {pandas_path.name} as needed (or paste in a fresh SAP download)")
         print("Type 'Y' here when you're done to save and continue.\n")
 
         while True:
@@ -51,7 +51,7 @@ def run_hierarchy_maker():
                 break
             print("Type 'Y' when you're done editing.")
 
-        print("Saving and closing pandas.xlsx...")
+        print(f"Saving and closing {pandas_path.name}...")
 
         wb.Save()
         wb.Close(SaveChanges=False)
@@ -62,10 +62,10 @@ def run_hierarchy_maker():
         print("Excel file saved and closed.")
         print("Running Hierarchy Maker...")
 
-        HierarchyMaker.hiymaker()
+        output_file = HierarchyMaker.hiymaker()
         print("Hierarchy Maker run successfully!")
 
-        os.startfile("pandas.xlsx")
+        os.startfile(output_file)
 
     except Exception as e:
         print(f"Error running hierarchy maker: {e}")
@@ -156,7 +156,7 @@ def run_git_commands(choice):
         print("GIT pulled please check if there are any erros")
     elif choice == 6:
         os.system('cls')
-        subprocess.run(["git", "commit", "-a", "-m", "asdfasdfas"])
+        subprocess.run(["git", "commit", "-a", "-m", "new job"])
         subprocess.run(["git", "push"])
         print("GIT pushed please check if there are any erros")
 
